@@ -1,0 +1,92 @@
+name: Publish English docs via GitHub Pages
+env:
+  ACTIONTEST: master
+on:
+  workflow_call:
+    secrets:
+      ENSITE_PASSWORD:
+        required: true
+      OSS_ID:
+        required: true
+      OSS_SECRET:
+        required: true
+      OSS_ENDPOINT:
+        required: true
+  push:
+    branches:
+    # Remember to add v before the following version number unless the version is master.
+      - master
+    paths:
+      - 'docs-en/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # fetch all commits/branches for gitversion
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+
+      - name : prepare
+        run: sh ./prepare.sh
+
+      - name: Git Config
+        run: git config user.name ChrisChen2023 && git config user.email chris.chen@vesoft.com
+          
+      - name: Mike Deploy
+        run: |
+          python ./scripts/render_english_only.py
+          git fetch origin gh-pages --depth=1 # fix mike's CI update
+          mike list
+          mike deploy ${{ env.ACTIONTEST }}  -p --rebase
+          mike set-default ${{ env.ACTIONTEST }} -p --rebase  
+    #  The set-default command is only applicable to the latest version and must be commented in older versions.
+
+
+      - name: show English git branch
+        run: |
+          git branch
+          git checkout .
+          git checkout gh-pages
+          
+      - name: Compress
+        run: |
+          tar -vczf ent-docs-for-devs.tar.gz ${{ env.ACTIONTEST }} versions.json *.html
+
+      - name: Transfer
+        uses: appleboy/scp-action@master
+        with:
+          host: 20.163.77.63
+          username: azureuser
+          password: ${{ secrets.ENSITE_PASSWORD }}
+          port: 404
+          source: ent-docs-for-devs.tar.gz
+          target: /var/www/
+
+      - name: UnCompress
+        uses: appleboy/ssh-action@master
+        with:
+          host: 20.163.77.63
+          username: azureuser
+          password: ${{ secrets.ENSITE_PASSWORD }}
+          port: 404
+          script: |
+            mkdir -p /var/www/ent-docs-for-devs/
+            tar -xzf /var/www/ent-docs-for-devs.tar.gz -C /var/www/ent-docs-for-devs/
+            mkdir -p /var/www/ent-docs-for-devs/site/pdf/
+            cp -f /var/www/ent-docs-for-devs/${{ env.ACTIONTEST }}/pdf/NebulaGraph_Enterprise_For_Developers.pdf /var/www/ent-docs-for-devs/site/pdf/NebulaGraph_Enterprise_For_Developers.pdf
+      
+#      - name: Upload to OSS
+#        uses: vesoft-inc/upload-oss@master
+#        with:
+#          key-id: ${{ secrets.OSS_ID }}
+#          key-secret: ${{ secrets.OSS_SECRET }}
+#          endpoint: ${{ secrets.OSS_ENDPOINT }}
+#          bucket: yueshu-graph
+#          asset-path: ${{ env.ACTIONTEST }}/pdf/NebulaGraph_Enterprise_For_Developers.pdf
+#          target-path: general/yueshu-doc/${{ env.ACTIONTEST }}
