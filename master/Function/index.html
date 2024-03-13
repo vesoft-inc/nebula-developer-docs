@@ -1,0 +1,631 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for NebulaGraph Database">
+      
+      
+        <meta name="author" content="NebulaGraph">
+      
+      
+        <link rel="canonical" href="https://ent-docs.developers.nebula-graph.io/master/Function/">
+      
+      
+      
+      
+      <link rel="icon" href="https://docs-cdn.nebula-graph.com.cn/figures/favicon.ico">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.6">
+    
+    
+      
+        <title>Function Design - NebulaGraph Database Developer's Manual</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.35e1ed30.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.356b1318.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans:300,300i,400,400i,700,700i%7CSource+Code+Pro:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans";--md-code-font:"Source Code Pro"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/logo.css">
+    
+      <link rel="stylesheet" href="../stylesheets/note.css">
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+      <link rel="stylesheet" href="../stylesheets/pdf.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+   <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="nebula" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#function_design" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      <header class="md-header" data-md-component="header">
+    <nav class="md-header__inner md-grid" aria-label="header.title">
+      <a href=".." title="NebulaGraph Database Developer&#39;s Manual" class="md-header__button md-logo" aria-label="NebulaGraph Database Developer's Manual" data-md-component="logo">
+        
+  <img src="https://docs-cdn.nebula-graph.com.cn/figures/vesoft-nebula-logo-white22-12-21.png" alt="logo">
+
+      </a>
+      <label class="md-header__button md-icon" for="__drawer">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+      </label>
+      <div class="md-header__title" data-md-component="header-title">
+        <div class="md-header__ellipsis">
+          <div class="md-header__topic">
+            <span class="md-ellipsis">
+              NebulaGraph Database Developer's Manual
+            </span>
+          </div>
+          <div class="md-header__topic" data-md-component="header-topic">
+            <span class="md-ellipsis">
+              
+                Function Design
+              
+            </span>
+          </div>
+        </div>
+      </div>
+      
+        <form class="md-header__option" data-md-component="palette">
+          
+            
+            
+            <input class="md-option" data-md-color-media="" data-md-color-scheme="nebula" data-md-color-primary="" data-md-color-accent="" type="radio" name="__palette" id="__palette_1">
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            </label>
+          
+            
+            
+            <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="" type="radio" name="__palette" id="__palette_2">
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+            </label>
+          
+        </form>
+      
+      
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    </nav>
+  </header>
+  
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="NebulaGraph Database Developer&#39;s Manual" class="md-nav__button md-logo" aria-label="NebulaGraph Database Developer's Manual" data-md-component="logo">
+      
+  <img src="https://docs-cdn.nebula-graph.com.cn/figures/vesoft-nebula-logo-white22-12-21.png" alt="logo">
+
+    </a>
+    NebulaGraph Database Developer's Manual
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    About
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pdf/NebulaGraph_Enterprise_For_Developers.pdf" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PDF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how_to_add_a_function" class="md-nav__link">
+    How to add a function
+  </a>
+  
+    <nav class="md-nav" aria-label="How to add a function">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#function_traits" class="md-nav__link">
+    function traits
+  </a>
+  
+    <nav class="md-nav" aria-label="function traits">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why_need_these_function_traits" class="md-nav__link">
+    Why need these function traits ?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    Examples
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function_framework" class="md-nav__link">
+    Function Framework
+  </a>
+  
+    <nav class="md-nav" aria-label="Function Framework">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#udfholder" class="md-nav__link">
+    UDFHolder
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function_registry" class="md-nav__link">
+    Function Registry
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execfunction" class="md-nav__link">
+    ExecFunction
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="function_design">Function Design<a class="headerlink" href="#function_design" title="Permanent link">&para;</a></h1>
+<p>This is nebula-ng's function design document. It describes concept and design choice to achieve two main goals of
+function layer.</p>
+<ul>
+<li><strong>Flexible</strong>: Based on Function Framework using c++ template and metaprogramming, a simple function interface is
+  possible, make it easy to add new function implementation into the function system.</li>
+</ul>
+<ul>
+<li><strong>Efficiency</strong>: An ExecFunction interface is defined, which wrapped underling kernel function implementations, it
+  employs following technologies to make the execution efficient.
+    - <strong>Auto/Manual Vectorization</strong>: enabling tight loop and cache-friendly computing
+    - <strong>Function Traits</strong>: using template expansion of metaprogramming.</li>
+</ul>
+<blockquote>
+<p>NOTE: Main idea of this design is inspired by velox, simplified some routines which are not need currently.
+- https://facebookincubator.github.io/velox/develop/scalar-functions.html
+- https://velox-lib.io/blog/simple-functions-1/</p>
+</blockquote>
+<h2 id="how_to_add_a_function">How to add a function<a class="headerlink" href="#how_to_add_a_function" title="Permanent link">&para;</a></h2>
+<p>This section introduced a general function interface, with this interface, developer of function (who add new functions)
+can easily implement and register a function into the system, without concerning too much about underling vectorization
+and batching. From this perspective, we achieve the goal of <code>Flexible</code>.</p>
+<h3 id="function_traits"><code>function traits</code><a class="headerlink" href="#function_traits" title="Permanent link">&para;</a></h3>
+<p>A function implementation, can define one or more multiple <code>callxxx</code> to declare its behavior at compile time.</p>
+<table>
+<thead>
+<tr>
+<th>function traits</th>
+<th>Input</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>udf_has_call_return_bool</td>
+<td>Reference, only accept not-null input</td>
+<td>bool (return false indicate null)</td>
+</tr>
+<tr>
+<td>udf_has_call_return_void</td>
+<td>Reference, only accept not-null input</td>
+<td>void (always return not-null)</td>
+</tr>
+<tr>
+<td>udf_has_callAscii_return_bool</td>
+<td>Input is reference, and content of the input are is all within Ascii codepoint range</td>
+<td>bool (return false indicate null)</td>
+</tr>
+<tr>
+<td>udf_has_callAscii_return_void</td>
+<td>Input is reference, and content of the input are is all within Ascii codepoint range</td>
+<td>void (always return not-null)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>default null behavior</strong>: a null value in any of the arguments produces a null result.</p>
+</blockquote>
+<h4 id="why_need_these_function_traits">Why need these function traits ?<a class="headerlink" href="#why_need_these_function_traits" title="Permanent link">&para;</a></h4>
+<p>At compile time, with function traits got, framework can generate vectorized version of each <code>callxxx</code> at compile time.
+At runtime, data(row batch) that need to be processed will be checked to see if that bach has any potential to invoke
+any faster version of <code>callxxx</code>;</p>
+<h4 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p>call()
+    - function define call, indicate it only handle not null input, null input should be handled by framework, and
+      produce null result without invoke any <code>callXXX</code>. It is <code>default null behavior</code>;
+    - e.g. PlusFunction for floating pointer numbers;</p>
+<div class="highlight"><pre><span></span><code><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="o">&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">PlusFunction</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">TInput</span><span class="o">&gt;</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">call</span><span class="p">(</span><span class="n">TInput</span><span class="o">&amp;</span><span class="w"> </span><span class="n">result</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">TInput</span><span class="o">&amp;</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">TInput</span><span class="o">&amp;</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+</li>
+</ul>
+<ul>
+<li>
+<p>callAscii()
+    - General string function need handle unicode strings (use utf8proc to handle unicode encoding), when input string
+      is ascii encoded only, a fast path can be defined to compute for only ascii string input;</p>
+<div class="highlight"><pre><span></span><code><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="o">&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">Substring</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// ASCII input always produces ASCII result.</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">is_default_ascii_behavior</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">I</span><span class="o">&gt;</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">call</span><span class="p">(</span><span class="n">String</span><span class="o">&amp;</span><span class="w"> </span><span class="n">result</span><span class="p">,</span>
+<span class="w">                                  </span><span class="k">const</span><span class="w"> </span><span class="n">String</span><span class="o">&amp;</span><span class="w"> </span><span class="n">input</span><span class="p">,</span>
+<span class="w">                                  </span><span class="n">I</span><span class="w"> </span><span class="n">start</span><span class="p">,</span>
+<span class="w">                                  </span><span class="n">I</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// should handle all conditions</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">I</span><span class="o">&gt;</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">callAscii</span><span class="p">(</span><span class="n">String</span><span class="o">&amp;</span><span class="w"> </span><span class="n">result</span><span class="p">,</span>
+<span class="w">                                       </span><span class="k">const</span><span class="w"> </span><span class="n">String</span><span class="o">&amp;</span><span class="w"> </span><span class="n">input</span><span class="p">,</span>
+<span class="w">                                       </span><span class="n">I</span><span class="w"> </span><span class="n">start</span><span class="p">,</span>
+<span class="w">                                       </span><span class="n">I</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// can assume input is ascii, use input.substr(...), much faster</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+</li>
+</ul>
+<blockquote>
+<p><code>callNullable()</code> and <code>callNullFree()</code> is used in very rare case, only support them when needed in the future.</p>
+</blockquote>
+<h2 id="function_framework">Function Framework<a class="headerlink" href="#function_framework" title="Permanent link">&para;</a></h2>
+<p>Functions following the previous defined principle will to be executed at runtime. While these function have no runtime
+polymorphism like virtual functions calls (virtual function call in row level can hurt cpu cache which should be
+avoided).</p>
+<p>Function framework is introduced to tackle this problem. As the underling execution framework, it gets traits from those
+registered functions, wraps and inlines them in for loop. Combine with runtime knowledge of data to process, it can
+dispatch to different <code>callxxx</code>. With bach processing and optimization from compiler, e.g. loop unrolling, loop
+vectorize, achieve the goal of <code>Efficiency</code></p>
+<h3 id="udfholder">UDFHolder<a class="headerlink" href="#udfholder" title="Permanent link">&para;</a></h3>
+<p>Internally, function is Wrapped in an UDFHolder. An UDFHolder extracts the defined function's traits using template
+expansion. With knowledge of these <code>function traits</code>, the framework specialize each function with an UDFHolder.</p>
+<h3 id="function_registry">Function Registry<a class="headerlink" href="#function_registry" title="Permanent link">&para;</a></h3>
+<p>All predefined functions are registered with as built-in functions into the global function register.
+<code>Function signature</code> is the key to register (system startup) and resolve (find function to execute in a specific query).
+function signature is constructed with information got from function metadata.</p>
+<p><code>function metadata</code> store information used during registration, resolving and execution, those metadata includes:</p>
+<ul>
+<li>Function name</li>
+<li>ArgTypes(InputTypes)</li>
+<li>ReturnType(OutputType)</li>
+<li>isDeterministic</li>
+<li>isDefaultNullBehavior</li>
+<li>isAscii</li>
+<li>etc</li>
+</ul>
+<blockquote>
+<p>NOTE: UDFHolder inherit FunctionMetadata.</p>
+</blockquote>
+<h3 id="execfunction">ExecFunction<a class="headerlink" href="#execfunction" title="Permanent link">&para;</a></h3>
+<p>ExecFunction is the top public interface of the function architecture. It exposes necessary information to the
+user of function (mostly expression), like: isDeterministic, isDefaultNullBehavior, isAscii.</p>
+<p>The most important interface is the apply function, define how data to passed in and returned.</p>
+<ul>
+<li>A SelectionVector is used as a row filter to specify which rows to process.</li>
+<li>Input/Output are represent in Vector class, Vector should support access each field by row index;<blockquote>
+<p>NOTE: Function layer do not assume memory layout of the input/output Vector, it uses c++ operator[] to retrieve
+  data, while the efficiency of this retrieval should have great influence on cache locality. </p>
+</blockquote>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">virtual</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="n">EvalCtx</span><span class="o">&amp;</span><span class="w"> </span><span class="n">context</span><span class="p">,</span>
+<span class="w">                       </span><span class="k">const</span><span class="w"> </span><span class="n">SelectionVector</span><span class="o">&amp;</span><span class="w"> </span><span class="n">rows</span><span class="p">,</span>
+<span class="w">                       </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">VectorPtr</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">inputs</span><span class="p">,</span>
+<span class="w">                       </span><span class="n">VectorPtr</span><span class="o">&amp;</span><span class="w"> </span><span class="n">result</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</code></pre></div>
+<p>Currently, ExecFunction is defined as pure virtual interface. This virtual function call slowness is amortized by rows
+in that batch. FuncExecAdaptor is the real implementation that connect the ExecFunction interface to the underling
+components.</p>
+<blockquote>
+<p>Why don't we make ExecFunction as a concrete class?</p>
+<p>This is because, with this simple row-based function interface and function framework, we can implement most of normal
+functions. While there are exceptions may exist. For instance, if a function need read data cross multiple rows, or
+even
+the whole batch, currently function interface paradigm is not enough. For those functions, they need inherit
+ExecFunction
+themselves, and implement their special purpose logic (just for future design possibility).</p>
+</blockquote>
+
+  <hr>
+<div class="md-source-file">
+  <small>
+    
+      Last update:
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">March 13, 2024</span>
+      
+    
+  </small>
+</div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2024 NebulaGraph - 浙ICP备20010487号
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.top", "header.autohide", "content.tabs.link", "content.code.copy"], "search": "../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.aecac24b.min.js"></script>
+      
+        <script src="../js/config.js"></script>
+      
+        <script src="../js/jquery.js"></script>
+      
+        <script src="../js/init.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+        <script src="https://www-cdn.nebula-graph.com.cn/nebula-docs/nebula-docs.7e772ed81c779cacbefc.js"></script>
+      
+    
+  <script>document$.subscribe(() => {const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});})</script></body>
+</html>
