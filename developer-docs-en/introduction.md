@@ -1,6 +1,6 @@
 # Meet Developer Edition
 
-NebulaGraph Developer Edition is intended for developers learning, exploring, and building graph database applications. It draws on Enterprise Edition capabilities within a defined single-host environment.
+NebulaGraph Database Developer Edition is intended for developers learning, exploring, and building graph database applications. It draws on Enterprise Edition capabilities within a defined single-host environment.
 
 Explore connected data modeling, GQL queries, and application integration. Upcoming documentation will cover Docker Compose, GQL, REST APIs, SDKs, connectors, ngql, and ngctl.
 

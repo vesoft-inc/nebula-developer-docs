@@ -1,40 +1,11 @@
+INHERIT: mkdocs-base.yml
+
 site_name: 悦数图数据库开发版文档
+site_description: 悦数图数据库开发版中文文档
 docs_dir: developer-docs-zh
-repo_url: https://github.com/vesoft-inc/nebula-developer-docs
 edit_uri: edit/master/developer-docs-zh/
+
 theme:
-  font:
-    text: Noto Sans Simplified Chinese
+  language: zh
   logo: https://docs-cdn.nebula-graph.com.cn/figures/yueshu-ent-docs-2023-5-15.png
   favicon: https://docs-cdn.nebula-graph.com.cn/figures/yueshu_favicon_230515.png
-  language: zh
-  name: material
-  custom_dir: theme
-  font: false
-  palette:
-    primary: white
-    accent: blue
-  features:
-    - navigation.sections
-    - navigation.expand
-    - navigation.footer
-    - content.action.edit
-    - content.code.copy
-plugins:
-  - search:
-      lang: [zh, en]
-markdown_extensions:
-  - admonition
-  - attr_list
-  - md_in_html
-  - pymdownx.superfences
-nav:
-  - 快速起步:
-      - 概览与产品定位: index.md
-      - 认识开发版: introduction.md
-  - 功能与版本:
-      - 开发版能力边界: limitations.md
-      - 文档版本与维护: versions.md
-  - 社区与共创:
-      - 参与文档编写: contributing.md
-      - 通过 AI 使用文档: ai.md

@@ -20,9 +20,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Micr
 .md-sidebar--primary{width:255px}.md-sidebar--secondary{display:none}
 .md-content{min-width:0}.md-content__inner{margin:0 24px 60px}
 .md-nav{font-size:12px;line-height:1.6}.md-nav__title{display:none}
-.md-nav__item--section>.md-nav__link{font-size:11px;font-weight:650;color:#172033;margin:0 0 9px}
-.md-nav__item--section{margin-bottom:26px}.md-nav__item--section>.md-nav>.md-nav__list{border-left:1px solid #e0e7f0;margin-left:0;padding-left:10px}
-.md-nav__link{color:#52627c}.md-nav__link--active{color:#2563eb!important;font-weight:600}
+.md-nav__link{color:#52627c}
+.md-sidebar--primary .md-nav__link{min-height:34px;margin:2px 0;padding:7px 10px;align-items:center;border-radius:5px}
+.md-sidebar--primary .md-nav__item--nested>.md-nav__link{font-weight:600;color:#273950}
+.md-sidebar--primary .md-nav__item--nested{margin-bottom:6px}
+.md-sidebar--primary .md-nav__item--nested>.md-nav{margin-left:10px;border-left:1px solid #e0e7f0}
+.md-sidebar--primary .md-nav__link:hover{background:#edf2f8}
+.md-sidebar--primary a.md-nav__link--active{color:#1d4ed8!important;font-weight:600;background:#eaf1ff;box-shadow:inset 3px 0 #2563eb}
+.md-sidebar--primary .md-nav__link .md-ellipsis{white-space:normal;overflow-wrap:anywhere}
 .md-typeset{font-size:14px;line-height:1.8;color:#465772}
 .md-typeset h1{font-size:29px;line-height:1.35;color:#131d30;font-weight:750;letter-spacing:-1px;margin:6px 0 10px}
 .md-typeset h2{font-size:17px;line-height:1.5;font-weight:650;color:#172033;margin:30px 0 12px;letter-spacing:0}
@@ -55,11 +60,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Micr
 @media(max-width:959px){.de-search-space{display:none}.de-brand{margin-right:auto}.de-version{max-width:130px}.de-notice a{display:none}.md-header__inner{gap:8px;padding:0 12px}}
 .de-card-bottom p{display:flex;align-items:center;justify-content:space-between;width:100%;margin:0}.de-actions p{display:flex;gap:8px;flex-wrap:wrap;margin:0}
 .md-header{background:linear-gradient(105deg,#003194 0%,#073ec7 52%,#0a2578 100%);color:#fff;border-bottom:1px solid #244da3;box-shadow:0 3px 9px #07173926}
-.de-notice{background:#f1fbff;color:#33445f;border-top:3px solid #635bff;border-bottom:1px solid #dceef5;font-size:13px}
+.de-notice{background:#fff4cc;color:#475569;border-top:0;border-bottom:1px solid #eadca6;font-size:13px}
 .de-notice>.md-grid{max-width:1280px;justify-content:flex-start;padding:8px 20px;align-items:center;gap:14px}
 .de-notice-copy{position:relative}
-.de-notice-copy:before{content:"";position:absolute;left:-14px;top:1px;bottom:1px;width:3px;border-radius:2px;background:#c7f7e6}
-.de-notice a{color:#165dff;font-weight:600;text-decoration:underline;text-underline-offset:2px}.de-notice a:hover{color:#0b46ce}
+.de-notice-copy:before{display:none}
+.de-notice a{color:#174ea6;font-weight:600;text-decoration:underline;text-decoration-color:#174ea655;text-underline-offset:3px}.de-notice a:hover{color:#103b80;text-decoration-color:currentColor}
 .md-header__inner{height:64px;gap:14px}
 .de-version-wrap{position:relative;display:flex;align-items:center;flex-shrink:0}
 .de-version-wrap:before{content:"";position:absolute;left:10px;width:6px;height:6px;border-radius:50%;background:#34d399;pointer-events:none}
@@ -74,8 +79,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Micr
 @media(min-width:960px){[data-md-toggle=search]:not(:checked)~.md-header .md-search__inner{width:100%}.md-header .md-search__icon[for=__search]{color:#dbeafe}[data-md-toggle=search]:checked~.md-header .md-search__icon[for=__search]{color:#52627c}}
 @media(max-width:700px){.de-grid{grid-template-columns:1fr}.md-content__inner{margin:0 16px 35px}.md-typeset h1{font-size:25px}.de-contribute{align-items:flex-start;flex-direction:column}.de-notice>.md-grid{justify-content:flex-start;padding:7px 16px 7px 18px;font-size:10px;line-height:1.5;gap:6px;flex-wrap:wrap}.de-notice-copy:before{left:-8px}.md-header__inner{gap:4px;padding:0 8px}.md-header__button{margin:0;padding:6px}.md-header__button.md-logo img{height:24px;max-width:115px}.de-version{max-width:95px;font-size:10px}.de-language{font-size:11px}.de-github{display:none}.de-footer .md-grid{flex-direction:column}.de-footer a{margin:0 16px 0 0}}
 </style>
+<style>
+/* Product identity and the primary documentation controls share one alignment grid. */
+.md-header{background:linear-gradient(105deg,#073b9f,#123889);box-shadow:0 2px 6px #0717391a}
+.md-header__inner{gap:16px}
+.md-header__button.md-logo img{height:24px;max-width:116px}
+.de-product{min-width:0;color:#fff;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:1}
+.de-product span{font-weight:400;color:#bdcfee;margin-left:6px}
+.de-version-wrap:before{display:none}
+.de-version{padding:6px 8px;border-radius:6px;max-width:105px;background:#ffffff0d;font-size:12px;font-family:inherit}
+.de-github{border-color:transparent;background:transparent;padding:6px 0}
+.de-github:hover{background:transparent;color:#bfdbfe}
+@media(min-width:960px){.md-search{min-width:160px;max-width:360px;width:360px;margin:0 8px 0 auto;flex:0 1 360px}.md-search__form{background:#ffffff0d;border-color:#ffffff38}}
+@media(max-width:959px){.md-header__inner{gap:10px}.de-product{flex:1}.md-header__button.md-logo{display:flex}.md-header__button[for=__drawer]{order:-1}.de-github{display:none}}
+@media(max-width:700px){.md-header__inner{gap:6px}.md-header__button.md-logo img{height:18px;max-width:76px}.de-product{font-size:12px}.de-product span{display:none}.de-version{max-width:76px;font-size:11px}.md-header__button{padding:4px}.de-language{font-size:11px}}
+.de-notice-copy{min-width:0;white-space:normal}
+@media(max-width:700px){.md-header__inner{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;height:auto;min-height:80px;padding:8px 12px;gap:6px 10px}.md-header__button.md-logo{grid-column:1;grid-row:1}.de-product{grid-column:2 / 5;grid-row:1}.md-header__button[for=__drawer]{grid-column:1;grid-row:2;justify-self:start}.de-version-wrap{grid-column:2;grid-row:2}.md-header__button[for=__search]{grid-column:3;grid-row:2}.de-language{grid-column:4;grid-row:2}.md-header__inner>.md-search{position:absolute}}
+@media(min-width:1200px){.de-notice{font-size:11px}.de-notice-copy{white-space:nowrap}}
+</style>
 {% endblock %}
 {% block footer %}
 {% set zh = config.theme.language == 'zh' %}
-<footer class="de-footer"><div class="md-grid"><span>{{ '悦数图数据库开发版 · 公开文档，欢迎参与修订' if zh else 'NebulaGraph Developer Edition · Public documentation. Contributions welcome.' }}</span><span><a href="{{ 'contributing/' | url }}">{{ '贡献指南' if zh else 'Contribute' }}</a><a href="{{ 'ai/' | url }}">{{ 'AI 文档入口' if zh else 'Docs for AI' }}</a><a href="{{ config.repo_url }}">GitHub ↗</a>{% if config.extra.official_url %}<a href="{{ config.extra.official_url }}">{{ '官方网站' if zh else 'Website' }} ↗</a>{% endif %}</span></div></footer>
+<footer class="de-footer"><div class="md-grid"><span>{{ '悦数图数据库开发版 · 公开文档，欢迎参与修订' if zh else 'NebulaGraph Database Developer Edition · Public documentation. Contributions welcome.' }}</span><span><a href="{{ 'contributing/' | url }}">{{ '贡献指南' if zh else 'Contribute' }}</a><a href="{{ 'ai/' | url }}">{{ 'AI 文档入口' if zh else 'Docs for AI' }}</a><a href="{{ config.repo_url }}">GitHub ↗</a>{% if config.extra.official_url %}<a href="{{ config.extra.official_url }}">{{ '官方网站' if zh else 'Website' }} ↗</a>{% endif %}</span></div></footer>
 {% endblock %}

@@ -4,7 +4,7 @@ hide:
 ---
 <div class="de-breadcrumb">nebula-docs / developer-edition / overview</div>
 <div class="de-intro" markdown>
-# 开发版文档 (Developer Edition)
+# 悦数图数据库开发版文档
 
 面向开发者的单机图数据库环境，用于学习 GQL、探索关联数据与验证应用集成。通过 Docker Compose 部署，无需申请或配置产品 License 文件。
 </div>

@@ -4,7 +4,7 @@ hide:
 ---
 <div class="de-breadcrumb">nebula-docs / developer-edition / overview</div>
 <div class="de-intro" markdown>
-# Developer Edition documentation
+# NebulaGraph Database Developer Edition
 
 A single-host graph database environment for learning GQL, exploring connected data, and evaluating application integrations. Deploy with Docker Compose without requesting or configuring a product license file.
 </div>

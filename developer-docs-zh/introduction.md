@@ -1,6 +1,6 @@
 # 认识悦数开发版
 
-悦数开发版（NebulaGraph Developer Edition）面向希望学习、体验和开发图数据库应用的开发者。它基于企业版能力，提供范围明确的单机使用环境。
+悦数开发版（NebulaGraph Database Developer Edition）面向希望学习、体验和开发图数据库应用的开发者。它基于企业版能力，提供范围明确的单机使用环境。
 
 你可以围绕关联数据建模、GQL 查询和应用集成开展学习与功能验证。后续文档将提供 Docker Compose 快速开始、GQL 参考、REST API、SDK 与连接器以及 ngql/ngctl 使用说明。
 

@@ -1,0 +1,31 @@
+repo_url: https://github.com/vesoft-inc/nebula-developer-docs
+
+theme:
+  name: material
+  custom_dir: theme
+  font: false
+  palette:
+    primary: white
+    accent: blue
+  features:
+    - navigation.tracking
+    - navigation.footer
+    - content.action.edit
+    - content.code.copy
+
+plugins:
+  search:
+    lang: [zh, en]
+  awesome-nav: {}
+
+markdown_extensions:
+  admonition: {}
+  attr_list: {}
+  md_in_html: {}
+  pymdownx.superfences: {}
+
+validation:
+  links:
+    not_found: warn
+    anchors: warn
+    unrecognized_links: warn

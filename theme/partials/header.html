@@ -1,21 +1,21 @@
 {% set zh = config.theme.language == 'zh' %}
 <header class="md-header" data-md-component="header">
 <div class="de-notice"><div class="md-grid">
-<span class="de-notice-copy">{% if zh %}悦数图数据库开发版单机免 License 运行，专为本地轻量研发与学习打造。需分布式海量数据与图算法？{% else %}NebulaGraph Developer Edition runs on a single host without a License file, built for lightweight local development and learning. Need distributed, large-scale graph data and algorithms?{% endif %}</span>
+<span class="de-notice-copy">{% if zh %}悦数图数据库开发版单机免 License 运行，专为本地轻量研发与学习打造。需分布式海量数据与图算法？{% else %}NebulaGraph Database Developer Edition runs on a single host without a License file, built for lightweight local development and learning. Need distributed, large-scale graph data and algorithms?{% endif %}</span>
 <a href="{{ 'limitations/' | url }}">{% if zh %}查看企业版区别 →{% else %}Compare with Enterprise →{% endif %}</a>
 </div></div>
 <nav class="md-header__inner md-grid" aria-label="{{ lang.t('header') }}">
 <a href="{{ nav.homepage.url | url }}" class="md-header__button md-logo" aria-label="{{ config.site_name }}">{% include "partials/logo.html" %}</a>
 <label class="md-header__button md-icon" for="__drawer">{% include ".icons/material/menu.svg" %}</label>
+<a class="de-product" href="{{ nav.homepage.url | url }}" title="{{ config.site_name }}">{{ '悦数图数据库开发版' if zh else 'NebulaGraph Database Developer Edition' }} <span>{{ '文档' if zh else 'Docs' }}</span></a>
 {% if config.extra.switches %}
 <span class="de-version-wrap"><select class="de-version" aria-label="{{ '文档版本' if zh else 'Documentation version' }}" onchange="location.href=this.value">
-{% for item in config.extra.switches %}<option value="{{ base_url }}/{{ item.url }}{{ page.url if page else '' }}" {% if item.current %}selected{% endif %}>{{ 'Developer ' ~ item.title }}</option>{% endfor %}
+{% for item in config.extra.switches %}<option value="{{ base_url }}/{{ item.url }}{{ page.url if page else '' }}" {% if item.current %}selected{% endif %}>{{ item.title }}</option>{% endfor %}
 </select></span>
 {% endif %}
-<div class="de-search-space"></div>
 {% if "material/search" in config.plugins %}
 <label class="md-header__button md-icon" for="__search">{% include ".icons/material/magnify.svg" %}</label>
-{% include "partials/search.html" %}
+{% filter replace('placeholder="搜索"', 'placeholder="搜索文档…"') | replace('placeholder="Search"', 'placeholder="Search docs…"') %}{% include "partials/search.html" %}{% endfilter %}
 {% endif %}
 {% if config.extra.language_url %}<a class="de-language" href="{% if config.extra.language_absolute %}{{ config.extra.language_absolute }}{% else %}{{ base_url }}/{{ config.extra.language_url }}{% endif %}{{ page.url if page else '' }}">{{ 'English' if zh else '中文' }}</a>{% endif %}
 <a class="de-github" href="{{ config.repo_url }}"><span class="md-icon">{% include ".icons/fontawesome/brands/github.svg" %}</span> GitHub</a>

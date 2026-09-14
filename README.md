@@ -1,31 +1,40 @@
-# NebulaGraph Developer Edition documentation
+# NebulaGraph Database Developer Edition documentation
 
-悦数开发版公开文档工程。包含中英文首页、产品介绍、功能限制、贡献指南及 AI 文档入口。当前只有 **preview（预览版）**，没有正式产品版本、部署教程或企业版公共参考模块。
+悦数开发版公开文档工程。包含中英文首页、产品介绍、功能限制、贡献指南及 AI 文档入口。部署教程和企业版公共参考模块尚未导入。当前配置中的 `v5.3.2` 暂时与 `preview` 共用源文件，还不是独立的历史版本快照。
 
 ## 本地预览
 
-推荐 Python 3.11 或 3.12。仅使用本仓库，不需要私有仓库或发布凭证。
+推荐 Python 3.11 或 3.12。仅使用本仓库，不需要私有仓库或发布凭证。第一次运行：
 
 ```sh
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements-preview.txt
-python scripts/docs.py serve
+make setup
+make serve
 ```
 
 访问：
-- 中文：http://127.0.0.1:8000/zh/preview/
-- English：http://127.0.0.1:8000/en/preview/
+- 中文：http://127.0.0.1:8001/zh/preview/
+- English：http://127.0.0.1:8001/en/preview/
 
-修改 Markdown 后，停止服务（Ctrl+C）并重新运行同一命令。指定其他端口：`python scripts/docs.py serve --port 8001`。
+修改 Markdown、`.nav.yml`、配置或主题后会自动重新构建，不需要停止服务。按 `Ctrl+C` 停止。
+
+只预览一种语言可以减少构建量：
+
+```sh
+make serve-zh
+make serve-en
+```
+
+指定其他端口或版本：`make serve-en PORT=8010 VERSION=v5.3.2`。
+需要同时检查版本下拉框时运行 `make serve-all`；日常写作无需构建全部历史版本。
 
 ## 日常编辑
 
 - 中文：`developer-docs-zh/`
 - 英文：`developer-docs-en/`
 - 首页：各语言目录的 `index.md`
-- 中英文基础配置：`mkdocs-zh.yml`、`mkdocs-en.yml`
-- 英文导航：`scripts/docs.py` 的 `NAV_EN`
+- 公共 MkDocs 配置：`mkdocs-base.yml`
+- 中英文配置：`mkdocs-zh.yml`、`mkdocs-en.yml`
+- 导航：各文档目录中的 `.nav.yml`
 - 样式、版本和语言控件：`theme/main.html`
 - 版本来源：`versions.json`
 - 正式中英文网址：`site-urls.json`
@@ -33,6 +42,29 @@ python scripts/docs.py serve
 网页编辑按钮指向对应源文件。GitHub 登录、fork 和 PR 审核由 GitHub 处理，本地修改须推送后才会反映到 GitHub。
 
 现有 `requirements.txt` 的用户修改保留；新框架使用较小的 `requirements-preview.txt`，无需安装 PDF 或企业版插件。
+
+## 增加大量目录和文档
+
+中文和英文使用相同的相对路径。例如：
+
+```text
+developer-docs-zh/gql-reference/match.md
+developer-docs-en/gql-reference/match.md
+```
+
+新增顶层目录会被根目录的 `.nav.yml` 自动发现。需要调整目录名称或页面顺序时，在新目录中增加自己的 `.nav.yml`：
+
+```yaml
+nav:
+  - 概述: index.md
+  - MATCH: match.md
+  - RETURN: return.md
+  - "*"
+```
+
+结尾的 `"*"` 会自动补充尚未手工排序的新页面。中文和英文分别维护各自的显示名称，但文件路径必须尽量一致。完整贡献步骤见 `CONTRIBUTING.md`。
+
+普通作者只编辑 Markdown 和 `.nav.yml`，不需要修改 `scripts/docs.py`。
 
 ## 多版本
 
@@ -63,7 +95,7 @@ python scripts/docs.py serve
 ## 构建与公开发布
 
 ```sh
-python scripts/docs.py build
+make check
 ```
 
 结果在 `site/`。默认是预览构建，robots 和页面 noindex 阻止预览站被主动索引。
@@ -71,8 +103,7 @@ python scripts/docs.py build
 正式网站采用两个域名，地址记录在 `site-urls.json`。只生成发布文件（不会上传网站）：
 
 ```sh
-python scripts/docs.py build --production
-python scripts/check_site.py --production
+make release
 ```
 
 | 发布文件目录 | 对应公开地址 |
@@ -91,8 +122,9 @@ python scripts/check_site.py --production
 
 正式构建的页面使用各自域名的 canonical、站点地图和 AI 索引。
 因为文档部署在 `/docs-dev/` 子路径，抓取规则必须由官网根目录的 `/robots.txt` 管理：
-请官网维护者确认允许抓取 `/docs-dev/`，并登记各版本的站点地图，例如
-`https://yueshu.com.cn/docs-dev/preview/sitemap.xml`（英文域名同理）。
+请官网维护者确认允许抓取 `/docs-dev/`，并登记语言站点的站点地图索引：
+`https://yueshu.com.cn/docs-dev/sitemap.xml` 和
+`https://nebula-graph.io/docs-dev/sitemap.xml`。
 不要用文档构建产物覆盖官网原有 robots.txt；正式语言产物不生成该文件。
 
 CI 检查本地预览和双域名正式构建，保存预览产物，不自动部署到任何服务器。旧服务器部署工作流已停用。
@@ -104,6 +136,6 @@ CI 检查本地预览和双域名正式构建，保存预览产物，不自动�
 
 ## English
 
-Install dependencies from `requirements-preview.txt`, then run `python scripts/docs.py serve`.
+Run `make setup`, then `make serve-en`.
 The public repository builds independently. Edit `developer-docs-en/` and submit a pull request.
 Deployment guides and shared reference modules are intentionally deferred to the next stage.
