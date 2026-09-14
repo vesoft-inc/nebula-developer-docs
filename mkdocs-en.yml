@@ -1,0 +1,39 @@
+site_name: NebulaGraph Database Developer Edition Docs
+docs_dir: developer-docs-en
+repo_url: https://github.com/vesoft-inc/nebula-developer-docs
+edit_uri: edit/master/developer-docs-zh/
+theme:
+  font:
+    text: Noto Sans
+  logo: https://docs-cdn.nebula-graph.com.cn/figures/vesoft-nebula-logo-white22-12-21.png
+  favicon: https://docs-cdn.nebula-graph.com.cn/figures/favicon.ico
+  language: en
+  name: material
+  custom_dir: theme
+  palette:
+    primary: 
+    accent: 
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.footer
+    - content.action.edit
+    - content.code.copy
+plugins:
+  - search:
+      lang: [zh, en]
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.superfences
+nav:
+  - Quick start:
+      - Overview and product positioning: index.md
+      - Getting started with the developer edition: introduction.md
+  - Features and versions:
+      - Limitations of the developer edition: limitations.md
+      - Documentation versions and maintenance: versions.md
+  - Community and collaboration:
+      - Contributing to the documentation: contributing.md
+      - Using documentation with AI: ai.md

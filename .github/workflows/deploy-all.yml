@@ -1,27 +1,11 @@
-name: deploy-all
-
+name: Legacy deployment disabled (all)
+# Old enterprise deployment is intentionally retired; use validate.yml to build.
 on:
-  push:
-    paths-ignore:
-      - 'docs-zh/**'
-      - 'docs-en/**'
-    branches:
-    # Remember to add v before the following version number unless the version is master.
-      - master
-
+  workflow_dispatch:
+permissions:
+  contents: read
 jobs:
-  deploy-zh:
-    uses: ./.github/workflows/deploy-zh.yml
-    secrets:
-      ZHSITE_PASSWORD: ${{ secrets.ZHSITE_PASSWORD }}
-      OSS_ID: ${{ secrets.OSS_ID }}
-      OSS_SECRET: ${{ secrets.OSS_SECRET }}
-      OSS_ENDPOINT: ${{ secrets.OSS_ENDPOINT }}
-      
-  deploy-en:
-    uses: ./.github/workflows/deploy-en.yml
-    secrets:
-      ENSITE_PASSWORD: ${{ secrets.ENSITE_PASSWORD }}
-      OSS_ID: ${{ secrets.OSS_ID }}
-      OSS_SECRET: ${{ secrets.OSS_SECRET }}
-      OSS_ENDPOINT: ${{ secrets.OSS_ENDPOINT }}
+  notice:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Use validate.yml for the new bilingual preview. Public hosting is not configured yet."
