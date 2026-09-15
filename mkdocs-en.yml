@@ -1,0 +1,11 @@
+INHERIT: mkdocs-base.yml
+
+site_name: NebulaGraph Database Developer Edition Documentation
+site_description: NebulaGraph Database Developer Edition documentation in English
+docs_dir: developer-docs-en
+edit_uri: edit/master/developer-docs-en/
+
+theme:
+  language: en
+  logo: https://docs-cdn.nebula-graph.com.cn/figures/vesoft-nebula-logo-white22-12-21.png
+  favicon: https://docs-cdn.nebula-graph.com.cn/figures/favicon.ico

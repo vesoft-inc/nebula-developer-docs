@@ -1,0 +1,4 @@
+# Minimal framework dependencies; existing requirements.txt is preserved.
+mkdocs==1.6.1
+mkdocs-material==9.5.21
+mkdocs-awesome-nav==3.3.0

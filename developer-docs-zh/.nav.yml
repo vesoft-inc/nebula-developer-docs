@@ -1,0 +1,12 @@
+# New pages and directories are appended automatically.
+append_unmatched: true
+nav:
+  - 快速起步:
+      - 概览与产品定位: index.md
+      - 认识开发版: introduction.md
+  - 功能与版本:
+      - 开发版能力边界: limitations.md
+      - 文档版本与维护: versions.md
+  - 社区与共创:
+      - 参与文档编写: contributing.md
+      - 通过 AI 使用文档: ai.md

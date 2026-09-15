@@ -1,0 +1,30 @@
+{
+  "default": "preview",
+  "versions": [
+    {
+      "id": "preview",
+      "title": {
+        "zh": "预览版",
+        "en": "Preview"
+      },
+      "source": {
+        "zh": "developer-docs-zh",
+        "en": "developer-docs-en"
+      },
+      "ref": "master"
+    },
+    {
+      "id": "v5.3.2",
+      "title": {
+        "zh": "v5.3.2",
+        "en": "v5.3.2"
+      },
+      "source": {
+        "zh": "developer-docs-zh",
+        "en": "developer-docs-en"
+      },
+      "ref": "v5.3.2"
+    }
+  ]
+  
+}

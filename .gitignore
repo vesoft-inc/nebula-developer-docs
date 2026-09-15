@@ -1,4 +1,9 @@
 site/
+site-single/
+.build/
+.venv/
+__pycache__/
 *.DS_Store
 *.diff
-*.vscode
+.vscode/
+site-production/
