@@ -18,6 +18,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 LANGUAGES = ("zh", "en")
+VARIABLE_PATTERN = re.compile(r"\{\{\s*([a-zA-Z_]\w*(?:\.\w+)*)\s*\}\}")
 
 
 def write(path, value):
@@ -25,13 +26,15 @@ def write(path, value):
     path.write_text(value, encoding="utf-8")
 
 
-def redirect(path, target, lang="en"):
+def redirect(path, target, product_name, lang="en"):
     safe = html.escape(target, quote=True)
+    title = f"{product_name}文档" if lang == "zh" else f"{product_name} documentation"
+    link_text = "打开文档" if lang == "zh" else "Open documentation"
     write(
         path,
         f'<!doctype html><html lang="{lang}"><meta charset="utf-8">'
         f'<meta name="robots" content="noindex"><meta http-equiv="refresh" content="0;url={safe}">'
-        f'<title>Developer Edition documentation</title><a href="{safe}">Open documentation</a></html>',
+        f'<title>{html.escape(title)}</title><a href="{safe}">{link_text}</a></html>',
     )
 
 
@@ -56,6 +59,40 @@ def read_manifest():
         else:
             sources[pair] = version["id"]
     return manifest
+
+
+def merge_dicts(base, override):
+    """Return a recursive merge without changing either input mapping."""
+    merged = dict(base)
+    for key, value in override.items():
+        if isinstance(value, dict) and isinstance(merged.get(key), dict):
+            merged[key] = merge_dicts(merged[key], value)
+        else:
+            merged[key] = value
+    return merged
+
+
+def flatten_variables(values, prefix=""):
+    variables = {}
+    for key, value in values.items():
+        name = f"{prefix}.{key}" if prefix else key
+        if isinstance(value, dict):
+            variables.update(flatten_variables(value, name))
+        elif isinstance(value, (str, int, float, bool)):
+            variables[name] = str(value)
+    return variables
+
+
+def document_variables(lang):
+    base = yaml.safe_load((ROOT / "mkdocs-base.yml").read_text(encoding="utf-8")) or {}
+    localized = yaml.safe_load((ROOT / f"mkdocs-{lang}.yml").read_text(encoding="utf-8")) or {}
+    extra = merge_dicts(base.get("extra", {}), localized.get("extra", {}))
+    return flatten_variables(extra)
+
+
+def render_document_variables(value, variables):
+    """Resolve documentation-name variables in Markdown exports and AI text files."""
+    return VARIABLE_PATTERN.sub(lambda match: variables.get(match.group(1), match.group(0)), value)
 
 
 def select_versions(manifest, requested):
@@ -93,7 +130,8 @@ def build(base_url=None, production=False, languages=LANGUAGES, requested_versio
 
     roots = public_urls if production else {lang: urljoin(base_url, lang + "/") for lang in LANGUAGES}
     output = ROOT / ("site-production" if production else "site")
-    staging = ROOT / ".build"
+    # Keep the live preview from overwriting public URLs in production staging.
+    staging = ROOT / ".build" / ("production" if production else "preview")
     full_build = set(languages) == set(LANGUAGES) and len(versions) == len(all_versions)
     if full_build and output.exists():
         shutil.rmtree(output)
@@ -103,6 +141,8 @@ def build(base_url=None, production=False, languages=LANGUAGES, requested_versio
     for version in versions:
         ident = version["id"]
         for lang in languages:
+            variables = document_variables(lang)
+            product_name = variables["nebula.name"]
             source = (ROOT / version["source"][lang]).resolve()
             if not source.is_relative_to(ROOT) or not source.is_dir():
                 raise ValueError("Source must be an existing directory inside this repository.")
@@ -118,20 +158,27 @@ def build(base_url=None, production=False, languages=LANGUAGES, requested_versio
             for page in sorted(source.rglob("*.md")):
                 rel = page.relative_to(source)
                 raw = page.read_text(encoding="utf-8")
-                clean = re.sub(r"\A---\n.*?\n---\n", "", raw, count=1, flags=re.S)
-                title = next((line[2:] for line in clean.splitlines() if line.startswith("# ")), rel.stem)
+                rendered = render_document_variables(raw, variables)
+                write(stage / rel, rendered)
+                public_markdown = re.sub(r"\A---\n.*?\n---\n", "", rendered, count=1, flags=re.S)
+                title = next(
+                    (line[2:] for line in public_markdown.splitlines() if line.startswith("# ")),
+                    rel.stem,
+                )
                 route = rel.with_suffix("").as_posix() + "/"
                 if rel.name == "index.md":
                     route = "" if rel.parent == Path(".") else rel.parent.as_posix() + "/"
                 url = urljoin(site_url, route)
-                write(stage / "markdown" / rel, clean)
+                write(stage / "markdown" / rel, public_markdown)
                 entries.append(
                     f"- [{title}]({url}): [Markdown]({urljoin(site_url, 'markdown/' + rel.as_posix())})"
                 )
-                full.append(f"# {title}\n\nVersion: {ident}; Language: {lang}\nSource: {url}\n\n{clean}")
+                full.append(
+                    f"# {title}\n\nVersion: {ident}; Language: {lang}\nSource: {url}\n\n{public_markdown}"
+                )
 
-            heading = f"# NebulaGraph Database Developer Edition — {ident} ({lang})\n\n"
-            note = "Documentation preview. Deployment instructions are not included.\n\n" if ident == "preview" else ""
+            heading = f"# {product_name} — {ident} ({lang})\n\n"
+            note = "Documentation preview. Nightly deployment and query examples await end-to-end validation.\n\n" if ident == "preview" else ""
             write(stage / "llms.txt", heading + note + "\n".join(entries) + "\n")
             write(stage / "llms-full.txt", heading + note + "\n\n---\n\n".join(full))
 
@@ -145,13 +192,16 @@ def build(base_url=None, production=False, languages=LANGUAGES, requested_versio
                 "docs_dir": str(stage),
                 "site_dir": str(output / prefix),
                 "site_url": site_url,
-                "site_description": (
-                    f"NebulaGraph Database Developer Edition documentation. Version: {ident}. Language: {lang}."
-                ),
+                "site_description": f"{product_name}. Version: {ident}. Language: {lang}.",
                 "exclude_docs": "markdown/",
                 "edit_uri": f"edit/{version['ref']}/{version['source'][lang]}/",
                 "theme": {"custom_dir": str(ROOT / "theme"), "language": lang},
                 "extra": {
+                    "gql": {"name": variables["gql.name"]},
+                    "nebula": {
+                        "name": product_name,
+                        "short_name": variables["nebula.short_name"],
+                    },
                     "preview": not production,
                     "language_url": f"../../{other}/{ident}/" if other_available else None,
                     "language_absolute": urljoin(roots[other], ident + "/")
@@ -187,13 +237,14 @@ def build(base_url=None, production=False, languages=LANGUAGES, requested_versio
     manifest_json = json.dumps(selected_manifest, ensure_ascii=False, indent=2) + "\n"
 
     for lang in languages:
-        redirect(output / lang / "index.html", f"{landing_version}/", lang)
-        redirect(output / lang / "latest" / "index.html", f"../{landing_version}/", lang)
+        product_name = document_variables(lang)["nebula.name"]
+        redirect(output / lang / "index.html", f"{landing_version}/", product_name, lang)
+        redirect(output / lang / "latest" / "index.html", f"../{landing_version}/", product_name, lang)
         if production:
             write(output / lang / "versions.json", manifest_json)
             write(
                 output / lang / "llms.txt",
-                "# NebulaGraph Database Developer Edition documentation\n\n"
+                f"# {product_name}\n\n"
                 + "\n".join(
                     f"- [{lang} {version['id']}]({urljoin(roots[lang], version['id'] + '/llms.txt')})"
                     for version in versions
@@ -204,11 +255,12 @@ def build(base_url=None, production=False, languages=LANGUAGES, requested_versio
 
     if not production:
         landing_lang = "zh" if "zh" in languages else languages[0]
-        redirect(output / "index.html", f"{landing_lang}/{landing_version}/", landing_lang)
+        product_name = document_variables(landing_lang)["nebula.name"]
+        redirect(output / "index.html", f"{landing_lang}/{landing_version}/", product_name, landing_lang)
         write(output / "versions.json", manifest_json)
         write(
             output / "llms.txt",
-            "# NebulaGraph Database Developer Edition documentation\n\n"
+            f"# {document_variables('en')['nebula.name']} documentation\n\n"
             + "\n".join(
                 f"- [{lang} {version['id']}]({urljoin(roots[lang], version['id'] + '/llms.txt')})"
                 for version in versions

@@ -1,6 +1,6 @@
 # NebulaGraph Database Developer Edition documentation
 
-悦数开发版公开文档工程。包含中英文首页、产品介绍、功能限制、贡献指南及 AI 文档入口。部署教程和企业版公共参考模块尚未导入。当前配置中的 `v5.3.2` 暂时与 `preview` 共用源文件，还不是独立的历史版本快照。
+悦数图数据库开发版公开文档工程。包含中英文首页、认识开发版、Docker Compose 快速开始、首次查询、贡献指南及 AI 文档入口。配套 Compose 文件与不含真实密码的环境变量模板位于各语言的 `get-started/files/`。教程使用 nightly 镜像，尚未完成镜像上的端到端验证；公网镜像获取方式与支持平台仍待确认。开发版目前没有额外的硬件配置要求。GQL、REST API 等公共参考模块尚未导入。当前配置中的 `v5.3.2` 暂时与 `preview` 共用源文件，还不是独立的历史版本快照。
 
 ## 本地预览
 
@@ -28,6 +28,8 @@ make serve-en
 需要同时检查版本下拉框时运行 `make serve-all`；日常写作无需构建全部历史版本。
 
 ## 日常编辑
+
+示例统一使用 ngql 内置的 `movie` 数据集。数据模型和加载注意事项见各语言的 `get-started/dataset.md`，首次加载与查询见 `get-started/first-query.md`。后续 GQL、REST API、SDK 示例沿用同一模型；写操作使用独立练习数据，避免修改其他教程依赖的原始数据。
 
 - 中文：`developer-docs-zh/`
 - 英文：`developer-docs-en/`
@@ -138,4 +140,6 @@ CI 检查本地预览和双域名正式构建，保存预览产物，不自动�
 
 Run `make setup`, then `make serve-en`.
 The public repository builds independently. Edit `developer-docs-en/` and submit a pull request.
-Deployment guides and shared reference modules are intentionally deferred to the next stage.
+The bilingual introduction and quick start include Compose downloads and a first-query tutorial.
+Nightly image access, platform requirements, and end-to-end validation remain to be confirmed.
+Shared GQL, REST API, and client reference modules are not included yet.

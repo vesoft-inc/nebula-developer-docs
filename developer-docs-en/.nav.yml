@@ -1,11 +1,18 @@
 append_unmatched: true
 nav:
-  - Getting started:
-      - Overview: index.md
-      - Meet Developer Edition: introduction.md
-  - Capabilities and versions:
-      - Product boundaries: limitations.md
-      - Documentation versions: versions.md
+  - Home: index.md
+  - Meet Developer Edition:
+      - Introduction: introduction.md
+      - Basic concepts: concepts.md
+      - Capabilities and limits: limitations.md
+  - Quick start:
+      - Start here: get-started/index.md
+      - Deploy with Docker Compose: get-started/deploy.md
+      - Connect and run your first query: get-started/first-query.md
+      - Example data: get-started/dataset.md
+  - Server administration:
+      - Configuration:
+          - Docker Compose configuration: server-admin/configurations/docker-compose.md
   - Community:
       - Contribute to the docs: contributing.md
       - Use docs with AI: ai.md

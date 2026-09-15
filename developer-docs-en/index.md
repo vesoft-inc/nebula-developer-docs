@@ -2,92 +2,58 @@
 hide:
   - toc
 ---
-<div class="de-breadcrumb">nebula-docs / developer-edition / overview</div>
+<div class="de-breadcrumb">{{nebula.name}}</div>
 <div class="de-intro" markdown>
-# NebulaGraph Database Developer Edition
+# {{nebula.name}}
 
-A single-host graph database environment for learning GQL, exploring connected data, and evaluating application integrations. Deploy with Docker Compose without requesting or configuring a product license file.
-</div>
-
-## Get started with Developer Edition {#quick-start}
-
-<div class="de-terminal">
-<div class="de-terminal-bar"><span>DEVELOPER EDITION / DOCS PREVIEW</span><span>Deployment guide coming soon</span></div>
-<div class="de-terminal-lines">01  Explore the product and single-host boundaries
-02  Deploy with Docker Compose · Coming soon
-03  Connect and run your first query · Coming soon</div>
+Learn graph databases with the built-in `movie` dataset: find a movie, then find its actors. Start a single-host development environment with Docker Compose, without requesting a product license file.
 </div>
 
-<div class="de-grid" markdown>
-<div class="de-fact" markdown>
-**Docker Compose**
-The supported deployment method
-</div>
-<div class="de-fact" markdown>
-**One host · One service group**
-A pre-initialized service group with one Host
-</div>
-<div class="de-fact" markdown>
-**Documentation preview**
-Not a released product image
-</div>
-</div>
+## First time here? Start with a query {#quick-start}
 
-## Core developer tasks
+[Follow the quick start →](get-started/index.md){ .md-button .md-button--primary }
+
+Prepare your environment, connect, load the data, and run a query. You do not need to know {{gql.name}} or create a service group yourself.
+
+!!! note "Documentation preview"
+
+    The tutorial uses `nightly` images and awaits end-to-end validation. Check the [deployment prerequisites](get-started/deploy.md) first. Version menu entries do not establish product release status or compatibility.
+
+## Find what you need
 
 <div class="de-grid" markdown>
 <div class="de-card" markdown>
-<div class="de-number">01 / GET STARTED</div>
-### Meet Developer Edition
-Understand the product, its boundaries, and the documentation scope. Deployment steps will follow.
+<div class="de-number">01 / INTRODUCTION</div>
+### Meet {{nebula.short_name}}
+Learn what {{nebula.short_name}} is for, its limits, and what nodes, edges, and graphs mean.
 <div class="de-card-bottom" markdown>
-<span class="de-pending">Product overview</span>
 [Read the introduction →](introduction.md)
 </div>
 </div>
 <div class="de-card" markdown>
-<div class="de-number">02 / GQL & API</div>
-### Explore queries and APIs
-GQL and REST references will match the corresponding product version. Shared reference content is not included yet.
+<div class="de-number">02 / DEPLOY</div>
+### Start your development environment
+Download the Docker Compose file, set your own password, and start the supplied containers.
 <div class="de-card-bottom" markdown>
-<span class="de-pending">References coming soon</span>
-[Version policy →](versions.md)
+[Deploy the database →](get-started/deploy.md)
 </div>
 </div>
 <div class="de-card" markdown>
-<div class="de-number">03 / SDK & TOOLS</div>
-### Connect your application
-SDKs, connectors, ngql, and ngctl documentation will follow. Current docs are available as Markdown and AI indexes.
+<div class="de-number">03 / FIRST QUERY</div>
+### Run your first query
+Load the built-in `movie` dataset and query movies and their actors.
 <div class="de-card-bottom" markdown>
-<span class="de-pending">Integrations coming soon</span>
-[Docs for AI →](ai.md)
+[Connect and query →](get-started/first-query.md)
 </div>
 </div>
 </div>
 
-## Developer Edition boundaries {#edition-compare}
+## Check the limits before you start {#edition-compare}
 
-| Area | Current scope | Notes |
-| --- | --- | --- |
-| Deployment | Docker Compose only | Images, ports, and requirements will accompany the deployment guide |
-| Meta and hosts | One Meta, one Host | No multi-host deployment path |
-| Service groups | One pre-initialized service group | No need to create multiple service groups |
-| Parts and replicas | One Part, one replica | Replica count cannot be changed |
-| License file | No application or configuration required | Software use follows the released product terms |
-| GQL, APIs, and SDKs | Documentation coming soon | Consult the matching version for supported features |
+{{nebula.short_name}} provides a fixed single-host configuration for learning, development, and testing. Read [Capabilities and limits](limitations.md) to check that it fits your needs.
 
-[Read all limitations →](limitations.md)
+## Get help or improve the docs {#contribute-section}
 
-## Edit and contribute {#contribute-section}
+For startup failures, see [deployment troubleshooting](get-started/deploy.md#troubleshooting). For query failures, see [query troubleshooting](get-started/first-query.md#troubleshooting).
 
-<div class="de-contribute" markdown>
-<div markdown>
-**Help improve Developer Edition docs**
-
-Sources are publicly maintained. Found a typo, missing explanation, or example? Submit a pull request for maintainers to review.
-</div>
-<div class="de-actions" markdown>
-[Contribution guide](contributing.md)
-[Report an issue ↗](https://github.com/vesoft-inc/nebula-developer-docs/issues)
-</div>
-</div>
+Found a documentation error or missing explanation? Follow the [contribution guide](contributing.md) to send feedback. You can also [read the docs with AI](ai.md).

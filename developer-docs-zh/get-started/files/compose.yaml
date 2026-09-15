@@ -1,0 +1,155 @@
+services:
+  metad:
+    image: ${IMAGE_PREFIX}-metad:${IMAGE_TAG}
+    container_name: metad
+    pull_policy: missing
+    environment:
+      TZ: ${TZ:-UTC}
+    command:
+      - --meta_server_addrs=graph-cluster:9559
+      - --port=9559
+      - --data_path=/data/meta
+      - --host=graph-cluster
+    ports:
+      - "9559"
+      - "9779"
+      - "9669"
+      - "19669"
+    volumes:
+      - ./data/meta:/data/meta
+      - ./logs/meta:/usr/local/nebula/logs
+    networks:
+      graph-cluster-dev:
+        aliases:
+          - graph-cluster
+    restart: unless-stopped
+
+  storaged:
+    image: ${IMAGE_PREFIX}-storaged:${IMAGE_TAG}
+    container_name: storaged
+    pull_policy: missing
+    network_mode: service:metad
+    command:
+      - --meta_server_addrs=graph-cluster:9559
+      - --port=9779
+      - --data_path=/data/storage
+      - --host=graph-cluster
+      - --memory_strategy=static
+    volumes:
+      - ./data/storage:/data/storage
+      - ./logs/storage:/usr/local/nebula/logs
+    depends_on:
+      ngctl:
+        condition: service_healthy
+    restart: unless-stopped
+
+  graphd:
+    image: ${IMAGE_PREFIX}-graphd:${IMAGE_TAG}
+    container_name: graphd
+    pull_policy: missing
+    network_mode: service:metad
+    command:
+      - --meta_server_addrs=graph-cluster:9559
+      - --port=9669
+      - --host=graph-cluster
+      - --memory_strategy=static
+    volumes:
+      - ./logs/graph:/usr/local/nebula/logs
+    depends_on:
+      ngctl:
+        condition: service_healthy
+    restart: unless-stopped
+
+  ngctl:
+    image: reg.vesoft-inc.com/vesoft-ng/ngctl:nightly
+    container_name: ngctl
+    pull_policy: missing
+    environment:
+      TZ: ${TZ:-UTC}
+      META_HOST: graph-cluster
+      META_PORT: "9559"
+      ROOT_PASSWORD: ${ROOT_PASSWORD}
+      SERVICE_GROUP: ${SERVICE_GROUP:-dev_cluster}
+      SERVICE_HOST: graph-cluster
+    entrypoint: ["/bin/sh", "-ec"]
+    command:
+      - |
+        set -u
+
+        run_idempotent() {
+          output=$$("$${@}" 2>&1) && return 0
+          status=$$?
+          case "$${output}" in
+            *"already exists"*|*"already inited"*|*"already initialized"*)
+              return 0
+              ;;
+          esac
+          printf '%s\n' "$${output}" >&2
+          return "$${status}"
+        }
+
+        until ngctl auth login \
+            -H "$${META_HOST}" \
+            -P "$${META_PORT}" \
+            -u root \
+            -p "$${ROOT_PASSWORD}" >/dev/null 2>&1; do
+          ngctl auth passwd \
+              -H "$${META_HOST}" \
+              -P "$${META_PORT}" \
+              -u root \
+              -c passwd \
+              -p "$${ROOT_PASSWORD}" >/dev/null 2>&1 || true
+          echo "waiting for Meta at $${META_HOST}:$${META_PORT}"
+          sleep 1
+        done
+
+        ngctl auth login \
+            -H "$${META_HOST}" \
+            -P "$${META_PORT}" \
+            -u root \
+            -p "$${ROOT_PASSWORD}"
+
+        run_idempotent ngctl svcgrp create "$${SERVICE_GROUP}" --replica-factor 1
+        run_idempotent ngctl svcgrp add-host "$${SERVICE_GROUP}" -H "$${SERVICE_HOST}"
+        run_idempotent ngctl svcgrp add-service \
+            "$${SERVICE_GROUP}" \
+            --type graphd \
+            -H "$${SERVICE_HOST}" \
+            --port 9669
+        run_idempotent ngctl svcgrp add-service \
+            "$${SERVICE_GROUP}" \
+            --type storaged \
+            -H "$${SERVICE_HOST}" \
+            --port 9779
+        run_idempotent ngctl svcgrp init "$${SERVICE_GROUP}"
+
+        exec tail -f /dev/null
+    depends_on:
+      metad:
+        condition: service_started
+        restart: true
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f 'tail -f /dev/null' >/dev/null"]
+      interval: 2s
+      timeout: 1s
+      retries: 60
+      start_period: 5s
+    networks:
+      - graph-cluster-dev
+    restart: unless-stopped
+
+  ngql:
+    image: reg.vesoft-inc.com/vesoft-ng/ngql:nightly
+    container_name: ngql
+    pull_policy: missing
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["exec tail -f /dev/null"]
+    depends_on:
+      graphd:
+        condition: service_started
+    networks:
+      - graph-cluster-dev
+    restart: unless-stopped
+
+networks:
+  graph-cluster-dev:

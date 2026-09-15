@@ -1,19 +1,28 @@
-# Meet Developer Edition
+# Meet {{nebula.short_name}}
 
-NebulaGraph Database Developer Edition is intended for developers learning, exploring, and building graph database applications. It draws on Enterprise Edition capabilities within a defined single-host environment.
+{{nebula.name}} provides a single-host graph database environment for learning how to model relationships, write queries, and evaluate your application.
 
-Explore connected data modeling, GQL queries, and application integration. Upcoming documentation will cover Docker Compose, GQL, REST APIs, SDKs, connectors, ngql, and ngctl.
+For example, use the built-in `movie` dataset to find a movie's actors. Actors and movies are **nodes**. The “acts in” relationship between them is an **edge**.
 
-## Relationship to Enterprise Edition
+## What you can do
 
-Developer Edition is limited to one host, one service group, one Part, and one replica. It does not provide the full Enterprise Edition cluster scaling and high-availability deployment capabilities. Read the [capabilities and limits](limitations.md).
+- **Learn graph databases and {{gql.name}}.** {{gql.name}} is a language for working with graph data. Create a graph, insert nodes and edges, and query their relationships.
+- **Develop and evaluate applications.** Try data models, queries, and application connections on one host.
+- **Prepare automated tests.** Use a development environment for functional testing. Connection methods and client versions must match your product version.
 
-## Public documentation
+{{nebula.short_name}} is intended for learning, development, and testing. The terms supplied with the software define permitted use.
 
-You can read this website without signing in. Documentation sources are maintained in the public [GitHub repository](https://github.com/vesoft-inc/nebula-developer-docs). Use the edit button on a page to propose improvements.
+## Where to start
 
-A public documentation repository does not imply that the database software is open source. Software use is governed by the product terms provided at release; this preview makes no production-use licensing commitment.
+If this is your first time using the product, go to the [Quick start](get-started/index.md). It takes you through preparing your environment, starting the database, connecting, loading `movie`, and querying it. You do not need to read every concept first.
 
-## Current scope
+To learn about the product before starting:
 
-This preview contains the homepage, product introduction, bilingual navigation, and version framework. Deployment instructions and shared reference modules are not included yet.
+1. Read [Basic concepts](concepts.md) for a movie-and-actor example of nodes, edges, types, labels, and graphs.
+2. Check [Capabilities and limits](limitations.md) to decide whether {{nebula.short_name}} fits your task.
+
+## What to know about deployment
+
+{{nebula.short_name}} supports Docker Compose deployment only. Docker runs software in containers. Docker Compose starts the required containers from a configuration file. A single-host deployment can contain more than one container.
+
+The supplied Docker Compose file initializes a service group on first startup: database services that work together. You do not need to create the service group yourself or request or configure a product license file. See [Capabilities and limits](limitations.md) for the fixed deployment limits.
