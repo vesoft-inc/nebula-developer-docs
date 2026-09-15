@@ -5,6 +5,11 @@ site_description: NebulaGraph Database Developer Edition documentation in Englis
 docs_dir: developer-docs-en
 edit_uri: edit/master/developer-docs-en/
 
+extra:
+  nebula:
+    name: NebulaGraph Database Developer Edition
+    short_name: Developer Edition
+
 theme:
   language: en
   logo: https://docs-cdn.nebula-graph.com.cn/figures/vesoft-nebula-logo-white22-12-21.png

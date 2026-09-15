@@ -5,6 +5,11 @@ site_description: 悦数图数据库开发版中文文档
 docs_dir: developer-docs-zh
 edit_uri: edit/master/developer-docs-zh/
 
+extra:
+  nebula:
+    name: 悦数图数据库开发版
+    short_name: 开发版
+
 theme:
   language: zh
   logo: https://docs-cdn.nebula-graph.com.cn/figures/yueshu-ent-docs-2023-5-15.png

@@ -43,6 +43,18 @@ def main():
     public_urls = json.loads((PROJECT / "site-urls.json").read_text(encoding="utf-8"))
     languages = LANGUAGES if args.lang == "all" else (args.lang,)
     versions = selected_versions(args.version)
+    hardcoded_names = {
+        "zh": ("悦数图数据库开发版", "悦数开发版", "开发版", "GQL"),
+        "en": ("NebulaGraph Database Developer Edition", "Developer Edition", "GQL"),
+    }
+    for version in versions:
+        for lang in languages:
+            source = PROJECT / version["source"][lang]
+            for page in source.rglob("*.md"):
+                content = page.read_text(encoding="utf-8")
+                for name in hardcoded_names[lang]:
+                    assert name not in content, f"Hard-coded documentation name {name!r} in {page}"
+
     page_roots = [root / lang / version["id"] for lang in languages for version in versions]
     pages = [page for page_root in page_roots for page in page_root.rglob("*.html")]
     assert pages, "Build the selected site first"
@@ -86,6 +98,10 @@ def main():
             raw_home = folder / "markdown" / "index.md"
             assert raw_home.is_file()
             assert not raw_home.read_text(encoding="utf-8").startswith("---")
+            for artifact in (*folder.rglob("*.html"), *folder.rglob("*.md"), folder / "llms-full.txt"):
+                content = artifact.read_text(encoding="utf-8")
+                assert "{{gql." not in content, f"Unresolved gql variable in {artifact}"
+                assert "{{nebula." not in content, f"Unresolved nebula variable in {artifact}"
             if args.production:
                 expected = public_urls[lang] + version["id"] + "/"
                 assert f'href="{expected}"' in (folder / "index.html").read_text(encoding="utf-8")

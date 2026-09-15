@@ -106,5 +106,5 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Micr
 {% endblock %}
 {% block footer %}
 {% set zh = config.theme.language == 'zh' %}
-<footer class="de-footer"><div class="md-grid"><span>{{ '悦数图数据库开发版 · 公开文档，欢迎参与修订' if zh else 'NebulaGraph Database Developer Edition · Public documentation. Contributions welcome.' }}</span><span><a href="{{ 'contributing/' | url }}">{{ '贡献指南' if zh else 'Contribute' }}</a><a href="{{ 'ai/' | url }}">{{ 'AI 文档入口' if zh else 'Docs for AI' }}</a><a href="{{ config.repo_url }}">GitHub ↗</a>{% if config.extra.official_url %}<a href="{{ config.extra.official_url }}">{{ '官方网站' if zh else 'Website' }} ↗</a>{% endif %}</span></div></footer>
+<footer class="de-footer"><div class="md-grid"><span>{{ config.extra.nebula.name }}{{ ' · 公开文档，欢迎参与修订' if zh else ' · Public documentation. Contributions welcome.' }}</span><span><a href="{{ 'contributing/' | url }}">{{ '贡献指南' if zh else 'Contribute' }}</a><a href="{{ 'ai/' | url }}">{{ 'AI 文档入口' if zh else 'Docs for AI' }}</a><a href="{{ config.repo_url }}">GitHub ↗</a>{% if config.extra.official_url %}<a href="{{ config.extra.official_url }}">{{ '官方网站' if zh else 'Website' }} ↗</a>{% endif %}</span></div></footer>
 {% endblock %}

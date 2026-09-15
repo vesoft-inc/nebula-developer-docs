@@ -18,6 +18,10 @@ plugins:
     lang: [zh, en]
   awesome-nav: {}
 
+extra:
+  gql:
+    name: GQL
+
 markdown_extensions:
   admonition: {}
   attr_list: {}
