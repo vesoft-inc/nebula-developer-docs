@@ -21,12 +21,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Micr
 .md-content{min-width:0}.md-content__inner{margin:0 24px 60px}
 .md-nav{font-size:12px;line-height:1.6}.md-nav__title{display:none}
 .md-nav__link{color:#52627c}
-.md-sidebar--primary .md-nav__link{min-height:34px;margin:2px 0;padding:7px 10px;align-items:center;border-radius:5px}
+.md-sidebar--primary .md-nav__link{min-height:34px;margin:2px 0;padding:7px 10px;align-items:center;border-radius:4px}
 .md-sidebar--primary .md-nav__item--nested>.md-nav__link{font-weight:600;color:#273950}
 .md-sidebar--primary .md-nav__item--nested{margin-bottom:6px}
 .md-sidebar--primary .md-nav__item--nested>.md-nav{margin-left:10px;border-left:1px solid #e0e7f0}
-.md-sidebar--primary .md-nav__link:hover{background:#edf2f8}
-.md-sidebar--primary a.md-nav__link--active{color:#1d4ed8!important;font-weight:600;background:#eaf1ff;box-shadow:inset 3px 0 #2563eb}
+.md-sidebar--primary .md-nav__item--nested>.md-nav>.md-nav__list{padding-left:12px}
+.md-sidebar--primary .md-nav__item--nested>.md-nav>.md-nav__list>.md-nav__item{padding-left:0;padding-right:0}
+.md-sidebar--primary .md-nav__link:hover{background:#f0f2f5}
+.md-sidebar--primary a.md-nav__link--active{position:relative;color:#1d4ed8!important;font-weight:500;background:#eff4fc;box-shadow:none}
+.md-sidebar--primary a.md-nav__link--active:before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:2px;background:#2563eb}
+.md-sidebar--primary .md-nav__item--nested>.md-nav .md-nav__link{margin-left:-13px;margin-right:-8px;padding-left:23px}
+.md-sidebar--primary .md-nav__item--nested>.md-nav>.md-nav__list>.md-nav__item>a.md-nav__link--active:before{left:0}
 .md-sidebar--primary .md-nav__link .md-ellipsis{white-space:normal;overflow-wrap:anywhere}
 .md-typeset{font-size:14px;line-height:1.8;color:#465772}
 .md-typeset h1{font-size:29px;line-height:1.35;color:#131d30;font-weight:750;letter-spacing:-1px;margin:6px 0 10px}
@@ -72,7 +77,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Micr
 .de-version option{background:#fff;color:#172033}
 .de-header-link,.de-language{font-size:12px;color:#dbeafe;white-space:nowrap}.de-header-link:hover,.de-language:hover{color:white}
 .de-github{display:inline-flex;align-items:center;gap:6px;color:white;background:#ffffff1a;border-color:#ffffff33;border-radius:5px;padding:5px 10px}.de-github:hover{background:#ffffff2e}.de-github svg{width:14px;height:14px}
-.md-header a:focus-visible,.de-version:focus-visible{outline:2px solid #bfdbfe;outline-offset:4px}
+.md-header a:focus-visible{outline:2px solid #bfdbfe;outline-offset:4px}
+.de-version:focus,.de-version:focus-visible{outline:none;box-shadow:none}
 @media(min-width:960px){.md-search{flex:1;min-width:180px;max-width:440px;width:auto;margin:0 12px}.de-search-space{flex:.2}.md-search__form{background:#ffffff1a;border-color:#ffffff40}.md-search__input{color:white}.md-search__input::placeholder{color:#c0d4f8}.md-search__icon{color:#dbeafe}[data-md-toggle=search]:checked~.md-header .md-search__form{background:white}[data-md-toggle=search]:checked~.md-header .md-search__input{color:#172033}[data-md-toggle=search]:checked~.md-header .md-search__icon{color:#52627c}}
 @media(max-width:1100px){.de-header-link{display:none}}
 @media(min-width:1200px){.de-notice>.md-grid{flex-wrap:nowrap}.de-notice-copy{white-space:nowrap}.de-notice a{flex-shrink:0;white-space:nowrap}}
